@@ -155,9 +155,8 @@ if __name__ == '__main__':
 
     for pdf_path in tqdm(file_paths):
         parser_marks = parse_pdf_to_marks(pdf_path)
-        parser_marks['pdf_path'] = pdf_path
+        parser_marks['pdf_path'] = os.path.dirname(pdf_path)
+        parser_marks['pdf_name'] = os.path.basename(pdf_path)
         parser_marks_df = parser_marks_df.append(parser_marks, ignore_index=True)
 
-    # parser_marks_df = pd.melt(parser_marks_df, id_vars=['town', 'county', 'category', 'year', 'date'],
-    #                           var_name='criteria', value_name='mark').dropna()
     write_df_to_csv(parser_marks_df, 'output/parser_marks_df.csv')
