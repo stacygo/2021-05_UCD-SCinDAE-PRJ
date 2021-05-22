@@ -1,5 +1,4 @@
-from functions import write_df_to_csv
-from tabulate import tabulate
+from functions import write_df_to_csv, print_pretty_table, show_extended_info
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,64 +9,69 @@ if __name__ == '__main__':
     year_end = 2019
     year_range = range(year_start, year_end + 1)
 
-    crawler_pdfs_df = pd.read_csv('output/crawler_pdfs_df.csv')
-
-    # Explore crawler output: view the first 5 rows
-    print('\ncrawler_pdfs_df: view the first 5 rows\n')
-    print(crawler_pdfs_df.head().to_markdown(tablefmt="pretty", stralign='l'))
+    df = pd.read_csv('output/crawler_pdfs_df.csv')
 
     # Explore crawler output: show dataframe info
-    print('\ncrawler_pdfs_df: show dataframe info\n')
-    print(crawler_pdfs_df.info())
+    print('\nShow dataframe info\n')
+    print(print_pretty_table(show_extended_info(df)))
 
-    # Explore crawler output: show dataframe shape vs rows with pdf_found=1
-    pdf_success_1 = crawler_pdfs_df['pdf_success'] == 1
-    crawler_pdfs_pt = ([['crawler_pdfs_df', crawler_pdfs_df.shape],
-                        ['rows with pdf_found=1', crawler_pdfs_df[pdf_success_1].shape]])
+    # View the first 5 rows
+    print('\nView the first 5 rows\n')
+    print(print_pretty_table(df.head()))
 
-    print('\ncrawler_pdfs_df: show dataframe shape vs rows with pdf_found=1\n')
-    print(tabulate(crawler_pdfs_pt, headers=['dataframe', 'shape'], tablefmt='pretty', stralign='l'))
+    # Show dataframe stats
+    output_pt = ([['dataframe', 'shape'], ['pdfs crawled', df.shape]])
 
-    # Explore crawler output: check year mismatches
-    crawler_pdfs_df['pdf_year'] = crawler_pdfs_df['pdf_name'].apply(lambda x: int(x[0:4]))
-    year_mismatch = crawler_pdfs_df['pdf_year'] != crawler_pdfs_df['year']
-    crawler_pdfs_df_year_mismatch = crawler_pdfs_df[year_mismatch]
+    find_pdf_success = df['pdf_success'] == 1
+    output_pt.append(['pdfs downloaded', df[find_pdf_success].shape])
 
-    write_df_to_csv(crawler_pdfs_df_year_mismatch, 'output/crawler_pdfs_df_year_mismatch.csv')
+    choose_cols = ['pdf_name', 'year', 'county']
+    output_pt.append(['pdfs to parse', df[find_pdf_success][choose_cols].drop_duplicates().shape])
 
-    print('\ncrawler_pdfs_df: check year mismatches\n')
-    show_columns = ['pdf_name', 'pdf_year', 'year', 'county', 'pdf_found', 'pdf_success']
-    print(crawler_pdfs_df_year_mismatch[show_columns].to_markdown(tablefmt="pretty", stralign='l', index=False))
+    print('\nShow dataframe stats\n')
+    print(print_pretty_table(output_pt))
 
-    # Explore crawler output: sort years by pdf_success
-    choose_columns = ['year', 'pdf_found', 'pdf_success']
-    crawler_years_df_agg = crawler_pdfs_df[choose_columns].groupby(by=['year']).sum().reset_index()
-    crawler_years_df_agg['year'] = crawler_years_df_agg['year'].apply(lambda x: str(x))
-    crawler_years_df_agg.sort_values(by=['pdf_success'], inplace=True)
+    # Check year mismatches
+    df['pdf_year'] = df['pdf_name'].apply(lambda x: int(x[0:4]))
+    find_year_mismatch = df['pdf_year'] != df['year']
 
-    sns.boxplot(y=crawler_years_df_agg['pdf_success'], palette='Set3')
+    print('\nCheck year mismatches\n')
+    choose_cols = ['pdf_name', 'pdf_year', 'year', 'county', 'pdf_found', 'pdf_success']
+    print(print_pretty_table(df[find_year_mismatch][choose_cols]))
+
+    write_df_to_csv(df[find_year_mismatch], 'output/crawler_pdfs_df_year_mismatch.csv')
+
+    # Show distribution of counties / years by pdf_success
+    choose_cols = ['year', 'county', 'pdf_found', 'pdf_success']
+    groupby_cols = ['year', 'county']
+    output_df = df[choose_cols].groupby(by=groupby_cols).sum().reset_index()
+
+    sns.boxplot(x='year', y='pdf_success', data=output_df, color='lightgrey', linewidth=1)
     plt.ylabel('Number of downloaded pdfs')
     plt.savefig('output/crawler_pdfs_df_years_distr.png')
 
-    print('\ncrawler_pdfs_df: sort years by pdf_success\n')
-    print(crawler_years_df_agg.to_markdown(tablefmt="pretty", stralign='l', index=False))
+    # Sort years by pdf_success
+    choose_cols = ['year', 'pdf_found', 'pdf_success']
+    groupby_cols = ['year']
+    output_df = df[choose_cols].groupby(by=groupby_cols).sum().reset_index()
+    output_df = output_df.sort_values(by=['pdf_success'])
 
-    # Explore crawler output: pivot by county vs year
-    crawler_pdfs_df_pivot = \
-        crawler_pdfs_df.pivot_table(index=['county'], columns=['year'], values='pdf_success',
-                                    aggfunc=np.sum, fill_value=0, margins=True, margins_name='(total)')
+    print('\nSort years by pdf_success\n')
+    print(print_pretty_table(output_df))
+
+    # Pivot by county vs year, and show the outliers
+    output_df = df.pivot_table(index=['county'], columns=['year'], values='pdf_success',
+                               aggfunc=np.sum, fill_value=0, margins=True, margins_name='(total)')
 
     for year in year_range:
-        if year not in crawler_pdfs_df_pivot:
-            crawler_pdfs_df_pivot[year] = 0
+        if year not in output_df:
+            output_df[year] = 0
 
-    crawler_pdfs_df_pivot.rename(columns={'(total)': -1}, inplace=True)
-    crawler_pdfs_df_pivot.sort_index(axis=1, inplace=True)
-    crawler_pdfs_df_pivot.rename(columns={-1: '(total)'}, inplace=True)
+    output_df = output_df.rename(columns={'(total)': -1}).sort_index(axis=1)
+    output_df = output_df.rename(columns={-1: '(total)'})
 
-    write_df_to_csv(crawler_pdfs_df_pivot.reset_index(),
-                    'output/crawler_pdfs_df_pivot_county_year.csv')
+    print('\nPivot by county vs year, and show the outliers\n')
+    show_columns = [2006, 2010, 2008, 2005, 2011]
+    print(print_pretty_table(output_df[show_columns]))
 
-    print('\ncrawler_pdfs_df: pivot by county vs year\n')
-    show_columns = [2006, 2010, 2008, 2011, 1996]
-    print(crawler_pdfs_df_pivot[show_columns].to_markdown(tablefmt="pretty", stralign='l'))
+    write_df_to_csv(output_df.reset_index(), 'output/crawler_pdfs_df_pivot_county_year.csv')
