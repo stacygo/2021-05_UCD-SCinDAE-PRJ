@@ -1,8 +1,5 @@
-# https://www.google.com/search?q=site:https://www.tidytowns.ie/+2006+pdf&start=100
-
 from functions import read_txt_splitlines, write_pdf, write_df_to_csv
 import pandas as pd
-import numpy as np
 from bs4 import BeautifulSoup
 import requests
 import time
