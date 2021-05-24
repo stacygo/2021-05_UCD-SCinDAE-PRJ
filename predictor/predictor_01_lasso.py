@@ -28,8 +28,8 @@ if __name__ == '__main__':
     print('\nView the first 5 rows after transformation\n')
     print(print_pretty_table(df.head()))
 
-    y = df.dropna()[2019].values
-    X = df.dropna().drop(['town_tidy', 'county_l1', 'criteria_tidy', 2019], axis=1).values
+    y = df[2019].values
+    X = df.drop(['town_tidy', 'county_l1', 'criteria_tidy', 2019], axis=1).values
 
     # Create train and test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
