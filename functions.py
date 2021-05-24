@@ -1,5 +1,6 @@
 import os
 import pdftotext
+import numpy as np
 import pandas as pd
 from tabulate import tabulate
 
@@ -65,3 +66,12 @@ def show_extended_info(df_to_describe):
         return df_with_info.reset_index()
 
     return 'Sorry, I can only describe pandas DataFrames.'
+
+
+def get_feature_importances(estimator):
+    if hasattr(estimator, 'coef_'):
+        return estimator.coef_
+    if hasattr(estimator, 'feature_importances_'):
+        return estimator.feature_importances_
+
+    return np.array([])

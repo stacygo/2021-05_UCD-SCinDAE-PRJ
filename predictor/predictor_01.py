@@ -1,4 +1,4 @@
-from functions import write_df_to_csv, print_pretty_table
+from functions import write_df_to_csv, print_pretty_table, get_feature_importances
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -11,15 +11,6 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import r2_score
 from sklearn.metrics import mean_squared_error
-
-
-def get_feature_importances(estimator):
-    if hasattr(estimator, 'coef_'):
-        return estimator.coef_
-    if hasattr(estimator, 'feature_importances_'):
-        return estimator.feature_importances_
-
-    return np.array([])
 
 
 if __name__ == '__main__':
