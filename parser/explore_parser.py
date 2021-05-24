@@ -25,5 +25,5 @@ if __name__ == '__main__':
         show_col_unique = print_pretty_list(show_col_unique)
         output_pt.append([col, show_col_unique])
 
-    print('\nheck unique values in \'category\', \'county\', \'criteria\'\n')
+    print('\nCheck unique values in \'category\', \'county\', \'criteria\'\n')
     print(print_pretty_table(output_pt))
