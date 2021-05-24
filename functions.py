@@ -31,10 +31,10 @@ def write_df_to_csv(output_df, output_file_name):
 
 def print_pretty_table(table_to_print):
     if isinstance(table_to_print, list):
-        return tabulate(table_to_print, headers='firstrow', tablefmt='rst', stralign='l', floatfmt='.1f')
+        return tabulate(table_to_print, headers='firstrow', tablefmt='rst', stralign='l', floatfmt='.4f')
 
     if isinstance(table_to_print, pd.core.frame.DataFrame):
-        return table_to_print.to_markdown(tablefmt="rst", stralign='l', floatfmt='.1f')
+        return table_to_print.to_markdown(tablefmt="rst", stralign='l', floatfmt='.4f')
 
     return 'Sorry, I can only print lists and pandas DataFrames.'
 
