@@ -3,6 +3,8 @@ import pdftotext
 import numpy as np
 import pandas as pd
 from tabulate import tabulate
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 def read_txt_splitlines(file_path):
@@ -75,3 +77,33 @@ def get_feature_importances(estimator):
         return estimator.feature_importances_
 
     return np.array([])
+
+
+def boxplot_df_to_png(output_df, output_file_name, output_plot, plot_size=(6.4, 4.8)):
+    plt.rcParams['font.family'] = 'Tahoma'
+    plt.rcParams['font.size'] = 8
+    plt.rcParams['axes.titleweight'] = 'bold'
+    plt.rcParams['axes.titlesize'] = 9
+    plt.rcParams['axes.labelweight'] = 'bold'
+
+    plt.figure(figsize=plot_size, dpi=200)
+    plt.tight_layout()
+
+    ax = sns.boxplot(x=output_plot['df_x'], y=output_plot['df_y'], data=output_df,
+                     color='lightgrey', linewidth=1)
+    sns.despine()
+
+    plt.title(output_plot['title'])
+
+    plt.xlabel(output_plot['x_label'])
+    if len(ax.get_xticklabels()) > 15:
+        plt.xticks(rotation=45, ha='right')
+    plt.ylabel(output_plot['y_label'])
+
+    if output_file_name == '':
+        plt.show()
+    else:
+        output_file_dir = os.path.dirname(output_file_name)
+        os.makedirs(output_file_dir, exist_ok=True)
+
+        plt.savefig('output/crawler_pdfs_df_years_distr.png', bbox_inches='tight')
