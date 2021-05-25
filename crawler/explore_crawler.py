@@ -1,8 +1,6 @@
-from functions import write_df_to_csv, print_pretty_table, show_extended_info
+from functions import write_df_to_csv, print_pretty_table, show_extended_info, boxplot_df_to_png
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 if __name__ == '__main__':
     year_start = 1996
@@ -41,14 +39,16 @@ if __name__ == '__main__':
 
     write_df_to_csv(df[find_year_mismatch], 'output/crawler_pdfs_df_year_mismatch.csv')
 
-    # Show distribution of counties / years by pdf_success
+    # Show distribution of pdf_success per county by years
     choose_cols = ['year', 'county', 'pdf_found', 'pdf_success']
     groupby_cols = ['year', 'county']
     output_df = df[choose_cols].groupby(by=groupby_cols).sum().reset_index()
 
-    sns.boxplot(x='year', y='pdf_success', data=output_df, color='lightgrey', linewidth=1)
-    plt.ylabel('Number of downloaded pdfs')
-    plt.savefig('output/crawler_pdfs_df_years_distr.png')
+    output_file_name = 'output/crawler_pdfs_df_years_distr.png'
+    output_plot = {'df_x': 'year', 'df_y': 'pdf_success',
+                   'title': 'Distribution of downloaded pdfs per county by years',
+                   'x_label': 'Year', 'y_label': 'Downloaded pdfs per county'}
+    boxplot_df_to_png(output_df, output_file_name, output_plot, (6.7, 3))
 
     # Sort years by pdf_success
     choose_cols = ['year', 'pdf_found', 'pdf_success']
