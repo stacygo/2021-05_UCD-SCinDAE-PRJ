@@ -79,7 +79,7 @@ def get_feature_importances(estimator):
     return np.array([])
 
 
-def boxplot_df_to_png(output_df, output_file_name, output_plot, plot_size=(6.4, 4.8)):
+def set_plot_layout(plot_size):
     plt.rcParams['font.family'] = 'Tahoma'
     plt.rcParams['font.size'] = 8
     plt.rcParams['axes.titleweight'] = 'bold'
@@ -89,8 +89,12 @@ def boxplot_df_to_png(output_df, output_file_name, output_plot, plot_size=(6.4, 
     plt.figure(figsize=plot_size, dpi=200)
     plt.tight_layout()
 
+
+def boxplot_df_to_png(output_df, output_file_name, output_plot, plot_size=(6.4, 4.8)):
+    set_plot_layout(plot_size)
+
     ax = sns.boxplot(x=output_plot['df_x'], y=output_plot['df_y'], data=output_df,
-                     color='lightgrey', linewidth=1)
+                     color='lightgrey', linewidth=0.75, fliersize=2.0)
     sns.despine()
 
     plt.title(output_plot['title'])
@@ -106,4 +110,53 @@ def boxplot_df_to_png(output_df, output_file_name, output_plot, plot_size=(6.4, 
         output_file_dir = os.path.dirname(output_file_name)
         os.makedirs(output_file_dir, exist_ok=True)
 
-        plt.savefig('output/crawler_pdfs_df_years_distr.png', bbox_inches='tight')
+        plt.savefig(output_file_name, bbox_inches='tight')
+
+
+def barplot_df_to_png(output_df, output_file_name, output_plot, plot_size=(6.4, 4.8)):
+    set_plot_layout(plot_size)
+
+    ax = sns.barplot(x=output_plot['df_x'], y=output_plot['df_y'], data=output_df,
+                     estimator=output_plot['estimator'],
+                     color='darkgray', linewidth=0.75)
+    if 'ylim' in output_plot:
+        ax.set(ylim=output_plot['ylim'])
+    sns.despine()
+
+    plt.title(output_plot['title'])
+
+    plt.xlabel(output_plot['x_label'])
+    if len(ax.get_xticklabels()) > 15:
+        plt.xticks(rotation=45, ha='right')
+    plt.ylabel(output_plot['y_label'])
+
+    if output_file_name == '':
+        plt.show()
+    else:
+        output_file_dir = os.path.dirname(output_file_name)
+        os.makedirs(output_file_dir, exist_ok=True)
+
+        plt.savefig(output_file_name, bbox_inches='tight')
+
+
+def heatmap_df_to_png(output_df, output_file_name, output_plot, plot_size=(6.4, 4.8)):
+    set_plot_layout(plot_size)
+
+    cmap = sns.dark_palette("#FFFFFF", as_cmap=True, reverse=True)  # "YlGnBu"
+    ax = sns.heatmap(output_df, cmap=cmap, annot=True, fmt='.0f')
+    sns.despine()
+
+    plt.title(output_plot['title'])
+
+    plt.xlabel(output_plot['x_label'])
+    if len(ax.get_xticklabels()) > 15:
+        plt.xticks(rotation=45, ha='right')
+    plt.ylabel(output_plot['y_label'])
+
+    if output_file_name == '':
+        plt.show()
+    else:
+        output_file_dir = os.path.dirname(output_file_name)
+        os.makedirs(output_file_dir, exist_ok=True)
+
+        plt.savefig(output_file_name, bbox_inches='tight')
