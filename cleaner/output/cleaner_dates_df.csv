@@ -1,0 +1,72 @@
+date,county_l1,town,pdf_path,pdf_name
+1998-03-22,Waterford,Aglish Village,../crawler/output/pdfs/1998/waterford,1998 COUNTY WATERFORD AGLISH VILLAGE.pdf
+1998-04-26,Cork,Courtmacsherry,../crawler/output/pdfs/1998/cork,1998 COUNTY CORK COURTMACSHERRY.pdf
+1999-03-10,Clare,Cree,../crawler/output/pdfs/1999/clare,1999 COUNTY CLARE CREE.pdf
+2002-01-17,Tipperary,Newport-Tipperary Nth,../crawler/output/pdfs/2002/tipperary-north,2002 COUNTY TIPPERARY_NORTH NEWPORT.pdf
+2004-01-01,Cork,Castletownshend,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST CASTLETOWNSHEND.pdf
+2004-01-01,Cork,Leap,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST LEAP.pdf
+2004-01-01,Cork,Union Hall,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST UNION HALL.pdf
+2004-01-03,Cork,Dunbeacon,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST DUNBEACON.pdf
+2004-01-05,Meath,Nobber,../crawler/output/pdfs/2004/meath,2004 COUNTY MEATH NOBBER.pdf
+2004-01-06,Meath,Crossakiel,../crawler/output/pdfs/2004/meath,2004 COUNTY MEATH CROSSAKIEL.pdf
+2004-01-07,Cork,Ballineen-Enniskeane,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST BALLINEENENNISKEANE.pdf
+2004-01-07,Cork,Newcestown Village,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST NEWCESTOWN VILLAGE.pdf
+2004-01-07,Meath,Athboy,../crawler/output/pdfs/2004/meath,2004 COUNTY MEATH ATHBOY.pdf
+2004-01-07,Meath,Kells,../crawler/output/pdfs/2004/meath,2004 COUNTY MEATH KELLS.pdf
+2004-01-08,Meath,Ballivor,../crawler/output/pdfs/2004/meath,2004 COUNTY MEATH BALLIVOR.pdf
+2004-01-08,Meath,Dunderry,../crawler/output/pdfs/2004/meath,2004 COUNTY MEATH DUNDERRY.pdf
+2004-01-08,Meath,Enfield,../crawler/output/pdfs/2004/meath,2004 COUNTY MEATH ENFIELD.pdf
+2004-01-08,Meath,Kilmessan,../crawler/output/pdfs/2004/meath,2004 COUNTY MEATH KILMESSAN.pdf
+2004-01-08,Meath,Rathmolyon,../crawler/output/pdfs/2004/meath,2004 COUNTY MEATH RATHMOLYON.pdf
+2004-01-09,Meath,Batterstown,../crawler/output/pdfs/2004/meath,2004 COUNTY MEATH BATTERSTOWN.pdf
+2004-01-09,Meath,Dunboyne,../crawler/output/pdfs/2004/meath,2004 COUNTY MEATH DUNBOYNE.pdf
+2004-01-11,Kilkenny,Ballyouskill,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY BALLYOUSKILL.pdf
+2004-01-11,Kilkenny,Clogh,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY CLOGH.pdf
+2004-01-11,Kilkenny,Moneenroe,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY MONEENROE.pdf
+2004-01-12,Kilkenny,Castlecomer,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY CASTLECOMER.pdf
+2004-01-12,Kilkenny,Gathabawn,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY GATHABAWN.pdf
+2004-01-13,Kilkenny,Johnstown,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY JOHNSTOWN.pdf
+2004-01-13,Kilkenny,Kells-Kilkenny,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY KELLS.pdf
+2004-01-13,Kilkenny,Urlingford,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY URLINGFORD.pdf
+2004-01-15,Kilkenny,Dungarvan-Kilkenny,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY DUNGARVAN.pdf
+2004-01-15,Kilkenny,Mullinavat,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY MULLINAVAT.pdf
+2004-01-15,Kilkenny,Slieverue,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY SLIEVERUE.pdf
+2004-01-16,Kilkenny,Piltown,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY PILTOWN.pdf
+2004-01-16,Kilkenny,Templeorum,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY TEMPLEORUM.pdf
+2004-01-17,Kilkenny,Graiguenamanagh,../crawler/output/pdfs/2004/kilkenny,2004 COUNTY KILKENNY GRAIGUENAMANAGH.pdf
+2004-01-24,Cork,Ballinspittle,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST BALLINSPITTLE.pdf
+2004-01-24,Cork,Courtmacsherry,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST COURTMACSHERRY.pdf
+2004-01-25,Cork,Lislevane,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST LISLEVANE.pdf
+2004-01-25,Cork,Ring,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST RING.pdf
+2004-01-25,Cork,Shannonvale,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST SHANNONVALE.pdf
+2004-01-26,Cork,Ballylickey,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST BALLYLICKEY.pdf
+2004-01-28,Cork,Goleen,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST GOLEEN.pdf
+2004-01-28,Cork,Lowertown,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST LOWERTOWN.pdf
+2004-01-28,Cork,Toormore,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST TOORMORE.pdf
+2004-01-29,Cork,Lisavaird,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST LISAVAIRD.pdf
+2004-01-30,Cork,Rosscarbery,../crawler/output/pdfs/2004/cork-west,2004 COUNTY CORK_WEST ROSSCARBERY.pdf
+2004-04-01,Longford,Abbeyshrule,../crawler/output/pdfs/2004/longford,2004 COUNTY LONGFORD ABBEYSHRULE.pdf
+2004-04-01,Longford,Newtowncashel,../crawler/output/pdfs/2004/longford,2004 COUNTY LONGFORD NEWTOWNCASHEL.pdf
+2004-04-02,Leitrim,Carrick-On-Shannon,../crawler/output/pdfs/2004/leitrim,2004 COUNTY LEITRIM CARRICKONSHANNON.pdf
+2004-04-02,Sligo,Coolaney,../crawler/output/pdfs/2004/sligo,2004 COUNTY SLIGO COOLANEY.pdf
+2004-04-04,Donegal,Carrigart,../crawler/output/pdfs/2004/donegal,2004 COUNTY DONEGAL CARRIGART.pdf
+2004-04-04,Donegal,Dunfanaghy,../crawler/output/pdfs/2004/donegal,2004 COUNTY DONEGAL DUNFANAGHY.pdf
+2004-04-04,Donegal,Glenties,../crawler/output/pdfs/2004/donegal,2004 COUNTY DONEGAL GLENTIES.pdf
+2004-04-05,Donegal,Castlefinn,../crawler/output/pdfs/2004/donegal,2004 COUNTY DONEGAL CASTLEFINN.pdf
+2004-04-05,Donegal,Letterkenny,../crawler/output/pdfs/2004/donegal,2004 COUNTY DONEGAL LETTERKENNY.pdf
+2004-04-05,Donegal,Raphoe,../crawler/output/pdfs/2004/donegal,2004 COUNTY DONEGAL RAPHOE.pdf
+2004-04-06,Donegal,Malin,../crawler/output/pdfs/2004/donegal,2004 COUNTY DONEGAL MALIN.pdf
+2005-01-06,Carlow,Hacketstown,../crawler/output/pdfs/2005/carlow,2005 COUNTY CARLOW HACKETSTOWN.pdf
+2005-10-22,Meath,Drumcree,../crawler/output/pdfs/2005/meath,2005 COUNTY MEATH DRUMCREE.pdf
+2005-10-28,Mayo,Killala,../crawler/output/pdfs/2005/mayo,2005 COUNTY MAYO KILLALA.pdf
+2008-01-01,Meath,Kells,../crawler/output/pdfs/2008/meath,2008 County Meath Kells 579.pdf
+2011-03-03,Roscommon,Keadue,../crawler/output/pdfs/2011/roscommon,2011_Roscommon_Keadue_745.pdf
+2012-03-20,Limerick,Distillery View Estate,../crawler/output/pdfs/2012/limerick,2012-County-Limerick-Distillery-View-Estate-2070.pdf
+2015-02-15,Limerick,Broadford,../crawler/output/pdfs/2015/limerick,2015-County-Limerick-Broadford-444.pdf
+2017-04-10,Limerick,Ballysteen,../crawler/output/pdfs/2017/limerick,2017 County Limerick Ballysteen 2221.pdf
+2018-11-10,Cork,Youghal,../crawler/output/pdfs/2018/cork-south,2018-County-Cork_South-Youghal-600.pdf
+2019-10-09,Limerick,Glenroe,../crawler/output/pdfs/2019/limerick,2019-County-Limerick-Glenroe-1145.pdf
+2019-10-10,Laois,Mountrath,../crawler/output/pdfs/2019/laois,2019-County-Laois-Mountrath-284.pdf
+2019-10-16,Longford,Ballinamuck,../crawler/output/pdfs/2019/longford,2019-County-Longford-Ballinamuck-475.pdf
+2019-10-16,Roscommon,Knockcroghery,../crawler/output/pdfs/2019/roscommon,2019-County-Roscommon-Knockcroghery-519.pdf
+2019-11-19,Offaly,Clonbullogue,../crawler/output/pdfs/2019/offaly,2019-County-Offaly-Clonbullogue-618.pdf
