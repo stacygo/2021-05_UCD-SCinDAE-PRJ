@@ -22,21 +22,21 @@ if __name__ == '__main__':
     print('\nView the first 5 rows\n')
     print(print_pretty_table(df.head()))
 
-    # Transform the dataset for predicting
     # Model 1: Predict 'TOTAL MARK' using only 'TOTAL MARK' dynamics by years for non-nan rows
+
+    # Transform the dataset for predicting
     find_total_mark = df['criteria_tidy'] == 'TOTAL MARK'
     choose_rows = find_total_mark
     choose_cols = ['category_tidy', 'county_l1', 'town_tidy', 'criteria_tidy']
     df = df[choose_rows].pivot_table(index=choose_cols, columns=['year'],
-                                     values='mark', aggfunc=np.sum, fill_value=np.nan).reset_index()
-    print(df.shape)
-    df = df.dropna()
-    print(df.shape)
+                                     values='mark', aggfunc=np.sum, fill_value=np.nan)
+    df = df.reset_index().dropna()
 
     # View the first 5 rows after transformation
     print('\nView the first 5 rows after transformation\n')
     print(print_pretty_table(df.head()))
 
+    # Choose target 'y' and features 'X'
     y = df[2019].values
     choose_cols = ['category_tidy', 'county_l1', 'town_tidy', 'criteria_tidy', 2019]
     X = df.drop(choose_cols, axis=1)
@@ -63,6 +63,7 @@ if __name__ == '__main__':
                                                           'max_depth': [3, 5, 15]}),
               ('gradboost_dft', GradientBoostingRegressor(), {})]
 
+    # Compute the models, and save their scores / features / parameters
     model_scores_df = pd.DataFrame()
     model_features_df = pd.DataFrame()
     model_results_df = pd.DataFrame()
@@ -88,18 +89,21 @@ if __name__ == '__main__':
                                         'best_params_': model_cv.best_params_}])
         model_scores_df = model_scores_df.append(model_cv_score)
 
+        # Save found regression coefficients / features importances
         model_cv_features = pd.DataFrame()
         model_cv_features[name] = get_feature_importances(model_cv.best_estimator_)
         model_features_df = pd.concat([model_features_df, model_cv_features], axis=1)
 
+        # Save CV results
         model_cv_results = pd.DataFrame([model_cv.cv_results_])
         model_cv_results['name'] = name
         model_results_df = model_results_df.append(model_cv_results)
 
-        # Make the predictions for train and test sets, and save them
+        # Make the predictions for 'X', and add them to 'df'
         df['pred_' + name] = model_cv.predict(X).round(2)
         print('> Done: ' + name)
 
+    # Print the results
     print('\nPrint the tuned parameters and metrics\n')
     print(print_pretty_table(model_scores_df, '.4f'))
 
@@ -111,4 +115,4 @@ if __name__ == '__main__':
     write_df_to_csv(model_scores_df, 'output/' + predictor_name + '_model_scores.csv')
     write_df_to_csv(model_features_df, 'output/' + predictor_name + '_model_features.csv')
     write_df_to_csv(model_results_df, 'output/' + predictor_name + '_model_results.csv')
-    write_df_to_csv(df, 'output/' + predictor_name + '.csv')
+    write_df_to_csv(df.sort_values(by=2019, ascending=False), 'output/' + predictor_name + '.csv')
