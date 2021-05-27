@@ -19,14 +19,18 @@ def generate_file_paths(file_dir):
 
 
 def parse_pdf_to_marks(file_name):
+    # Set up a list of exceptions
+    # Exceptions: Files in a non-traditional format, too different from the others to warrant parsing
     not_to_parse = {'../crawler/output/pdfs/2005/limerick/2005 COUNTY LIMERICK BROADFORD LIMK 510.pdf':
                         'input/not_to_parse/2005_limerick_broadford.csv'}
 
     if file_name in not_to_parse:
+        # Read the results for the exceptions from a .csv file
         pdf_parsed = pd.read_csv(not_to_parse[file_name],
                                  parse_dates=['date'],
                                  dtype={'mark': np.float64, 'max_mark': np.float64, 'year': np.float64})
     else:
+        # Otherwise, read and parse the first page of pdf
         pdf = read_pdf(file_name)
         pdf_parsed = parse_pdf_page_to_marks(pdf[0])
 
@@ -149,14 +153,17 @@ def define_scenario_criteria(pdf_page, year):
 
 
 if __name__ == '__main__':
+    # Generate a list of file paths to pdfs produced by the crawler
     file_paths = generate_file_paths('../crawler/output/pdfs')
 
     parser_marks_df = pd.DataFrame()
 
+    # Iterate over the paths to get the information from pdfs
     for pdf_path in tqdm(file_paths):
         parser_marks = parse_pdf_to_marks(pdf_path)
         parser_marks['pdf_path'] = os.path.dirname(pdf_path)
         parser_marks['pdf_name'] = os.path.basename(pdf_path)
         parser_marks_df = parser_marks_df.append(parser_marks, ignore_index=True)
 
+    # Write a csv with the 'dirty' dataset
     write_df_to_csv(parser_marks_df, 'output/parser_marks_df.csv')
