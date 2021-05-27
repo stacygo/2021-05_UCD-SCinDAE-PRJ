@@ -3,16 +3,21 @@ import pandas as pd
 import numpy as np
 
 if __name__ == '__main__':
+    # Read the 'dirty' dataset from a csv file
     df = pd.read_csv('../parser/output/parser_marks_df.csv',
                      parse_dates=['date'],
                      dtype={'mark': np.float64, 'max_mark': np.float64, 'year': np.float64})
 
-    # Explore parser output: show dataframe info
+    # Show dataframe info
     print('\nShow dataframe info\n')
     print(print_pretty_table(show_extended_info(df)))
 
     # Clean 'category' column
+
+    # > Step 1: Read the mapping of population categories to National Awards categories from a csv file
     categories_df = pd.read_csv('input/categories.csv')
+
+    # > Step 2: Merge the dataframes – enrich the dataset with a ‘category_tidy’ column
     df = df.merge(categories_df, how='left', on=['category'])
 
     # Clean 'county' column
@@ -20,7 +25,7 @@ if __name__ == '__main__':
 
     # Check & clean 'town' column
 
-    # > Step 1: Add a column with a county from 'pdf_path'
+    # > Step 1: Add a column with a county extracted from 'pdf_path'
     df['pdf_path_county'] = df['pdf_path'].apply(lambda x: x.split('/')[-1])
 
     # > Step 2: Process 'Ballingarry' to differentiate Ballingarry (North Tipperary) -- a civil parish
@@ -43,13 +48,15 @@ if __name__ == '__main__':
 
     write_df_to_csv(output_df, 'output/cleaner_towns_df.csv')
 
-    # > Step 4: Apply the results of manual post-processing of town names
+    # > Step 4: Read the mapping of town names from a csv file
     towns_df = pd.read_csv('input/towns.csv')
+
+    # > Step 5: Merge the dataframes – apply the results of manual post-processing of town names
     df = df.merge(towns_df, how='left', on=['county_l1', 'town'])
 
     # Check & clean 'date' column
 
-    # > Step 1: Add a column with a month
+    # > Step 1: Add a column with a month extracted from 'date
     df['date_month'] = df['date'].dt.month
 
     # > Step 2: Check the min / max / pd.NaT dates by years
@@ -101,15 +108,17 @@ if __name__ == '__main__':
 
     write_df_to_csv(output_df, 'output/cleaner_criteria_2014_df.csv')
 
-    # > Step 4: Apply the results of manual post-processing of criteria
+    # > Step 4: Read the mapping of criteria from a csv file
     criteria_df = pd.read_csv('input/criteria_2014.csv')
+
+    # > Step 5: Merge the dataframes – apply the results of manual post-processing of criteria
     df = df.merge(criteria_df, how='left', on=['criteria'])
 
     # Drop some columns, and drop duplicates
     choose_cols = ['county', 'town', 'criteria', 'pdf_name', 'pdf_path', 'pdf_path_county', 'date_month']
     df = df.drop(choose_cols, axis=1).drop_duplicates()
 
-    # Explore cleaner output: show dataframe info
+    # Show dataframe info
     print('\nShow dataframe info after cleaning\n')
     print(print_pretty_table(show_extended_info(df)))
 
