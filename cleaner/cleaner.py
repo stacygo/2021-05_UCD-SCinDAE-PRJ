@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 if __name__ == '__main__':
-    # Read the 'dirty' dataset from a csv file
+    # Read the 'dirty' dataset from a .csv file
     df = pd.read_csv('../parser/output/parser_marks_df.csv',
                      parse_dates=['date'],
                      dtype={'mark': np.float64, 'max_mark': np.float64, 'year': np.float64})
@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     # Clean 'category' column
 
-    # > Step 1: Read the mapping of population categories to National Awards categories from a csv file
+    # > Step 1: Read the mapping of population categories to National Awards categories from a .csv file
     categories_df = pd.read_csv('input/categories.csv')
 
     # > Step 2: Merge the dataframes – enrich the dataset with a ‘category_tidy’ column
@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     # Check & clean 'town' column
 
-    # > Step 1: Add a column with a county extracted from 'pdf_path'
+    # > Step 1: Add a column 'pdf_path_county' with a county extracted from 'pdf_path'
     df['pdf_path_county'] = df['pdf_path'].apply(lambda x: x.split('/')[-1])
 
     # > Step 2: Process 'Ballingarry' to differentiate Ballingarry (North Tipperary) -- a civil parish
@@ -42,13 +42,13 @@ if __name__ == '__main__':
     find_tipperary_south = df['pdf_path_county'] == 'tipperary-south'
     df.loc[find_ballingarry & find_tipperary_south, 'town'] = 'Ballingarry (South)'
 
-    # > Step 3: Make a csv file with a list of counties / towns for further post-processing of town names
+    # > Step 3: Make a .csv file with a list of counties / towns for further post-processing of town names
     choose_cols = ['county_l1', 'town']
     output_df = df[choose_cols].drop_duplicates().sort_values(by=choose_cols)
 
     write_df_to_csv(output_df, 'output/cleaner_towns_df.csv')
 
-    # > Step 4: Read the mapping of town names from a csv file
+    # > Step 4: Read the mapping of town names from a .csv file
     towns_df = pd.read_csv('input/towns.csv')
 
     # > Step 5: Merge the dataframes – apply the results of manual post-processing of town names
@@ -56,7 +56,7 @@ if __name__ == '__main__':
 
     # Check & clean 'date' column
 
-    # > Step 1: Add a column with a month extracted from 'date
+    # > Step 1: Add a column 'date_month' with a month extracted from 'date'
     df['date_month'] = df['date'].dt.month
 
     # > Step 2: Check the min / max / pd.NaT dates by years
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     print('\nShow min / max / pd.NaT dates by years\n')
     print(print_pretty_table(output_df))
 
-    # > Step 3: Make a csv file with a list of towns with the adjudication date out of May-September
+    # > Step 3: Make a .csv file with a list of towns with the adjudication date out of May-September
     find_month_in = df['date_month'].isin([5, 6, 7, 8, 9])
     choose_cols = ['date', 'county_l1', 'town', 'pdf_path', 'pdf_name']
     output_df = df[~find_month_in][choose_cols].drop_duplicates()
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     find_years = (df['year'] >= 2014) & (df['year'] <= 2019)
     df = df[find_years]
 
-    # > Step 3: Make a csv file with a list of criteria for further post-processing
+    # > Step 3: Make a .csv file with a list of criteria for further post-processing
     output_df = df.pivot_table(index=['criteria'], columns=['year'], values='max_mark',
                                aggfunc=np.mean, fill_value=0).reset_index()
     print('\nShow mean max_mark by years and criteria\n')
@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
     write_df_to_csv(output_df, 'output/cleaner_criteria_2014_df.csv')
 
-    # > Step 4: Read the mapping of criteria from a csv file
+    # > Step 4: Read the mapping of criteria from a .csv file
     criteria_df = pd.read_csv('input/criteria_2014.csv')
 
     # > Step 5: Merge the dataframes – apply the results of manual post-processing of criteria
@@ -122,5 +122,5 @@ if __name__ == '__main__':
     print('\nShow dataframe info after cleaning\n')
     print(print_pretty_table(show_extended_info(df)))
 
-    # Make a csv file with a clean dataset
+    # Write the clean dataset for the period 2014-2019 to a .csv file
     write_df_to_csv(df, 'output/cleaner_marks_df_2014.csv')
