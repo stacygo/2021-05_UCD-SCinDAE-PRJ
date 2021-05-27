@@ -165,5 +165,5 @@ if __name__ == '__main__':
         parser_marks['pdf_name'] = os.path.basename(pdf_path)
         parser_marks_df = parser_marks_df.append(parser_marks, ignore_index=True)
 
-    # Write a csv with the 'dirty' dataset
+    # Write the 'dirty' dataset to a .csv file
     write_df_to_csv(parser_marks_df, 'output/parser_marks_df.csv')

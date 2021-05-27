@@ -3,11 +3,12 @@ import pandas as pd
 import numpy as np
 
 if __name__ == '__main__':
+    # Read the 'dirty' dataset from a .csv file
     df = pd.read_csv('output/parser_marks_df.csv',
                      parse_dates=['date'],
                      dtype={'mark': np.float64, 'max_mark': np.float64, 'year': np.float64})
 
-    # Explore parser output: show dataframe info
+    # Show dataframe info
     print('\nShow dataframe info\n')
     print(print_pretty_table(show_extended_info(df)))
 
