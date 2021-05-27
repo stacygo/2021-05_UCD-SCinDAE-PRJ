@@ -1,8 +1,10 @@
-from functions import write_df_to_csv, print_pretty_table, get_feature_importances
+from functions import write_df_to_csv, show_extended_info, print_pretty_table, get_feature_importances
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression, Lasso, Ridge, ElasticNet
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import BaggingRegressor
@@ -15,16 +17,28 @@ from sklearn.metrics import mean_squared_error
 
 if __name__ == '__main__':
     SEED = 42
-    predictor_name = 'predictor_03_2'
-    df = pd.read_csv('../cleaner/output/cleaner_marks_df_2014.csv')
+    predictor_name = 'predictor_03'
+
+    # Read the clean dataset from a .csv file
+    df = pd.read_csv('../cleaner/output/cleaner_marks_df_2014.csv',
+                       parse_dates=['date'],
+                       dtype={'mark': np.float64, 'max_mark': np.float64, 'year': np.float64})
 
     # View the first 5 rows
     print('\nView the first 5 rows\n')
     print(print_pretty_table(df.head()))
 
-    # Model 3: Predict 'TOTAL MARK' (2019) by 'criteria_tidy' (2018, % of max), 'category_tidy'
+    # Approach 3: Predict 'TOTAL MARK' (2019) by 'criteria_tidy' (2018, % of max), 'date_dn', 'date_month', 'category'
 
-    # Calculate 'mark_rel' as % of 'mark' from 'max_mark'
+    # Transform the dataset for predicting
+
+    # Add a column 'date_dn' with a week day name extracted from 'date' and shortened to 2 symbols
+    df['date_dn'] = df['date'].dt.day_name().apply(lambda x: x[0:2])
+
+    # Add a column 'date_month' with a month name extracted from 'date' and shortened to 3 symbols
+    df['date_month'] = df['date'].dt.month_name().apply(lambda x: x[0:3])
+
+    # Add a column 'mark_rel' calculated as % of 'mark' from 'max_mark'
     df['mark_rel'] = df['mark'] / df['max_mark']
 
     # Transform the dataset to get a target column
@@ -32,58 +46,54 @@ if __name__ == '__main__':
     choose_rows = find_total_mark
     choose_cols = ['category_tidy', 'county_l1', 'town_tidy']
     df_y = df[choose_rows].pivot_table(index=choose_cols, columns=['year'],
-                                       values='mark_rel', aggfunc=np.min, fill_value=np.nan)
+                                       values='mark', aggfunc=np.sum, fill_value=np.nan)
     df_y = df_y[[2019]].reset_index().dropna()
 
-    # View the first 5 rows after transformation
-    print('\nView the first 5 rows after transformation\n')
-    print(print_pretty_table(df_y.head()))
-    print(df_y.shape)
-
-    # Add a column 'category_code' to shorten categories name
-    # df['criteria_tidy'] = pd.Categorical(df['criteria_tidy'])
-    # df['criteria_code'] = df['criteria_tidy'].cat.codes
-    # df['criteria_code'] = df['criteria_code'].apply(lambda x: 'cri_' + str(x))
-
-    # Transform the dataset for predicting
+    # Transform the dataset to get features columns
     find_non_total_mark = df['criteria_tidy'] != 'TOTAL MARK'
     find_year_2018 = df['year'] == 2018
     choose_rows = find_non_total_mark & find_year_2018
-    choose_cols = ['category_tidy', 'county_l1', 'town_tidy']
-    df = df[choose_rows].pivot_table(index=choose_cols, columns=['criteria_tidy'],
-                                     values='mark_rel', aggfunc=np.min, fill_value=np.nan)
-    df = df.reset_index().dropna()
+    choose_cols = ['category_tidy', 'county_l1', 'town_tidy', 'date_dn', 'date_month', 'category']
+    df_Xy = df[choose_rows].pivot_table(index=choose_cols, columns=['criteria_tidy'],
+                                        values='mark_rel', aggfunc=np.min, fill_value=np.nan)
+    df_Xy = df_Xy.reset_index().dropna()
 
-    # View the first 5 rows after transformation
-    print('\nView the first 5 rows after transformation\n')
-    print(print_pretty_table(df.iloc[:, 0:5].head(), '.4f'))
-    print(df.shape)
+    # Add dummy variables for 'date_dn', 'date_month', 'category'
+    df_Xy = pd.get_dummies(df_Xy, columns=['date_dn'], drop_first=True)
+    df_Xy = pd.get_dummies(df_Xy, columns=['date_month'], drop_first=True)
+    df_Xy = pd.get_dummies(df_Xy, columns=['category'], drop_first=True)
+    print('\nShape with dummies: ' + str(df_Xy.shape))
 
-    # Add a dummy variable for 'category_tidy'
-    df['category_dummy'] = df['category_tidy']
-    df = pd.get_dummies(df, columns=['category_dummy'], drop_first=True)
-    print('\nShape with dummies: ' + str(df.shape))
+    # Show dataframe info after transformation
+    print('\nShow dataframe info after transformation\n')
+    print(print_pretty_table(show_extended_info(df_Xy)))
 
     # Merge the transformed dataset with the target column
-    df = df.merge(df_y, how='inner', on=choose_cols)
-    print('\nShape after the merge: ' + str(df.shape))
+    choose_cols = ['category_tidy', 'county_l1', 'town_tidy']
+    df_Xy = df_Xy.merge(df_y, how='inner', on=choose_cols)
+    print('\nShape after the merge: ' + str(df_Xy.shape))
 
     # Choose target 'y' and features 'X'
-    y = df[2019].values
+    y = df_Xy[2019].values
     choose_cols = ['category_tidy', 'county_l1', 'town_tidy', 2019]
-    X = df.drop(choose_cols, axis=1)
+    X = df_Xy.drop(choose_cols, axis=1)
 
     # Create train and test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=SEED)
 
     # List the models with their parameters
     models = [('linreg', LinearRegression(), {}),
-              ('lasso', Lasso(), {'alpha': np.linspace(0.0001, 1, 50)}),
-              ('ridge', Ridge(), {'alpha': np.linspace(0.0001, 1, 50)}),
-              ('elasticnet', ElasticNet(), {'l1_ratio': np.linspace(0.0001, 1, 30)}),
+              ('lasso', Lasso(), {'alpha': np.linspace(0.001, 0.1, 50)}),
+              ('ridge', Ridge(), {'alpha': np.linspace(0.01, 0.1, 50)}),
+              ('elasticnet', ElasticNet(), {'l1_ratio': np.linspace(0.9, 1, 30)}),
+              ('knn', KNeighborsRegressor(), {'n_neighbors': [2, 3, 4, 5],
+                                              'weights': ['uniform', 'distance'],
+                                              'algorithm': ['auto', 'ball_tree', 'kd_tree', 'brute']}),
+              ('svr', SVR(), {'C': np.linspace(100, 300, 20),
+                              'epsilon': np.linspace(0.01, 1, 10)}),
               ('treereg', DecisionTreeRegressor(), {'criterion': ['mse', 'friedman_mse', 'mae', 'poisson'],
                                                     'max_depth': [3, 5, 9, 15, 25, None],
-                                                    'min_samples_split': [2, 5, 20, 24],
+                                                    'min_samples_split': [2, 7, 20, 24],
                                                     'min_samples_leaf': [1, 2, 5, 8]}),
               ('randforest', RandomForestRegressor(), {'criterion': ['mse', 'mae'],
                                                        'n_estimators': [50, 100, 300]}),
@@ -132,20 +142,20 @@ if __name__ == '__main__':
         model_results_df = model_results_df.append(model_cv_results)
 
         # Make the predictions for 'X', and add them to 'df'
-        df['pred_' + name] = model_cv.predict(X).round(2)
+        df_Xy['pred_' + name] = model_cv.predict(X).round(2)
         print('> Done: ' + name)
 
-    # Print the results
+    # Print the tuned parameters and metrics
     print('\nPrint the tuned parameters and metrics\n')
     print(print_pretty_table(model_scores_df, '.4f'))
 
-    print('\nPrint the features importances\n')
+    # Transform the dataframe with found regression coefficients / features importances
     model_features_df = model_features_df.T
     model_features_df.columns = X.columns.values
-    print(print_pretty_table(model_features_df.iloc[:, 0:3], '.4f'))
-    print(model_features_df.shape)
+    model_features_df = model_features_df.reset_index()
 
+    # Write the results to .csv files
     write_df_to_csv(model_scores_df, 'output/' + predictor_name + '_model_scores.csv')
     write_df_to_csv(model_features_df, 'output/' + predictor_name + '_model_features.csv')
     write_df_to_csv(model_results_df, 'output/' + predictor_name + '_model_results.csv')
-    write_df_to_csv(df.sort_values(by=2019, ascending=False), 'output/' + predictor_name + '.csv')
+    write_df_to_csv(df_Xy.sort_values(by=2019, ascending=False), 'output/' + predictor_name + '.csv')
