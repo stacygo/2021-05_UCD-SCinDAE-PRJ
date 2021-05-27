@@ -13,6 +13,7 @@ def get_pdfs_by_year_county(year, county):
 
     # Send the request; catch the response and extract the HTML
     reports_html = requests.get(url).text
+    time.sleep(3)
 
     # Create a BeautifulSoup object from the HTML
     reports_soup = BeautifulSoup(reports_html, features="html.output")
@@ -75,5 +76,5 @@ if __name__ == '__main__':
             crawler_pdfs['county'] = county
             crawler_pdfs_df = crawler_pdfs_df.append(crawler_pdfs)
 
-    # Write a report with the results of crawling
+    # Write a report with the results of crawling to a .csv file
     write_df_to_csv(crawler_pdfs_df, 'output/crawler_pdfs_df.csv')
