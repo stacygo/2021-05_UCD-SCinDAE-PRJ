@@ -11,7 +11,7 @@ def get_pdfs_by_year_county(year, county):
     url = 'https://www.tidytowns.ie/reports/?report_year=' + year + '&report_county=' + county
     print(url)
 
-    # Send the request; catch the response and extract the html
+    # Send the request; catch the response and extract the HTML
     reports_html = requests.get(url).text
 
     # Create a BeautifulSoup object from the HTML
@@ -25,6 +25,7 @@ def get_pdfs_by_year_county(year, county):
 
     year_county_reports_list = []
 
+    # Download the pdfs (if there is no previously downloaded pdf on a disk)
     if len(reports_soup_ul_li) > 0:
         for code in reports_soup_ul_li:
             code_a_href = code.find('a')['href']
@@ -60,10 +61,13 @@ if __name__ == '__main__':
     year_start = 1996
     year_end = 2019
     year_range = range(year_start, year_end + 1)
+
+    # Read the list of counties (as used on tidytowns.ie) from a .txt file
     counties_list = read_txt_splitlines('input/counties.txt')
 
     crawler_pdfs_df = pd.DataFrame()
 
+    # Iterate over years and counties to download the pdfs
     for year in year_range:
         for county in counties_list:
             crawler_pdfs = pd.DataFrame(get_pdfs_by_year_county(str(year), county))
@@ -71,4 +75,5 @@ if __name__ == '__main__':
             crawler_pdfs['county'] = county
             crawler_pdfs_df = crawler_pdfs_df.append(crawler_pdfs)
 
+    # Write a report with the results of crawling
     write_df_to_csv(crawler_pdfs_df, 'output/crawler_pdfs_df.csv')
